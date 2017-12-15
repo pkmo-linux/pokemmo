@@ -10,8 +10,8 @@
 EXE = pokemmo
 SRCDIR = src
 PREFIX = $(DESTDIR)/usr
-GAMEDIR = $(PREFIX)/games
-STARTUP = $(GAMEDIR)/$(EXE)
+BINDIR = $(PREFIX)/games
+GAMEDIR = $(PREFIX)/share/games
 ICNDIR = $(PREFIX)/share/pixmaps
 APPDIR = $(PREFIX)/share/applications
 
@@ -23,14 +23,27 @@ DESKTOP = pokemmo.desktop
 CP = cp -r
 RM = rm -r
 MD = mkdir -p
-ECHO = echo
-CHMOD = chmod 755 -R
+CHMOD = chmod 755
 
 all:
 	@$(CP) "$(SRCDIR)/$(SCRIPT)" "$(EXE)"
 	@$(CHMOD) "$(EXE)"
 
 clean:
-	@$(RM) pokemmo
+	rm -r $(EXE)
+
+install: all
+	@$(MD) "$(BINDIR)"
+	@$(CP) "$(EXE)" "$(BINDIR)"
+	@$(MD) "$(GAMEDIR)/$(EXE)"
+	@$(CP) "$(SRCDIR)/$(DATA)" "$(GAMEDIR)/$(EXE)"
+	@$(MD) "$(ICNDIR)"
+	@$(CP) "$(SRCDIR)/$(ICON)" "$(ICNDIR)"
+	@$(MD) "$(APPDIR)"
+	@$(CP) "$(SRCDIR)/$(DESKTOP)" "$(APPDIR)"
+
+uninstall: clean
+	@$(RM) "$(BINDIR)/$(EXE)" "$(GAMEDIR)/$(EXE)"
+	@$(RM) "$(ICNDIR)/$(ICON)" "$(APPDIR)/$(DESKTOP)"
 
 .PHONY: all clean install uninstall
