@@ -23,9 +23,9 @@ case "$1" in
             JAVA_OPTS=(-Xms128M)
 
             if [ -f "$POKEMMO/PokeMMO.l4j.ini" ]; then
-                JAVA_OPTS+=($(grep -oE "\-Xmx[0-9]{1,4}(M|G)" "$POKEMMO/PokeMMO.l4j.ini" || echo -- "-Xmx384M"))
+                JAVA_OPTS+=($(grep -oE "\-Xmx[0-9]{1,4}(M|G)" "$POKEMMO/PokeMMO.l4j.ini" || echo -- "-Xmx512M"))
             else
-                JAVA_OPTS+=(-Xmx384M)
+                JAVA_OPTS+=(-Xmx512M)
             fi
         fi
 
@@ -66,7 +66,7 @@ showMessage() {
 downloadPokemmo() {
   rm -f "$PKMOLAUNCHERCONFIG"
   find "$POKEMMO" -type f -name "*.TEMPORARY" -exec rm -f {} +
-  cp -f /usr/share/games/pokemmo-launcher/pokemmo_bootstrapper.jar "$POKEMMO/"
+  cp -f /usr/share/games/pokemmo/pokemmo_bootstrapper.jar "$POKEMMO/"
 
   # Updater exits with 1 on successful update
   getJavaOpts "updater"
@@ -109,12 +109,12 @@ fi
 ######################
 
 if [[ ! -z "$XDG_CONFIG_HOME" ]]; then
-    PKMOLAUNCHERCONFIG="$XDG_CONFIG_HOME/pokemmo-launcher"
+    PKMOLAUNCHERCONFIG="$XDG_CONFIG_HOME/pokemmo"
 else
-    PKMOLAUNCHERCONFIG="$HOME/.config/pokemmo-launcher"
+    PKMOLAUNCHERCONFIG="$HOME/.config/pokemmo"
 fi
 
-export TEXTDOMAIN=pokemmo-launcher
+export TEXTDOMAIN=pokemmo
 export TEXTDOMAINDIR="/usr/share/locale/"
 
 if [[ ! -d "$HOME" || ! -r "$HOME" || ! -w "$HOME" || ! -x "$HOME" ]]; then showMessage --error $"(Error 5) $HOME is not accessible. Exiting.." ; fi
@@ -134,9 +134,9 @@ while getopts "vhH:-:" opt; do
            PS4='Line ${LINENO}: '
         ;;
         h) printf "\
- PokeMMO Linux Launcher v1.3\n\
+ PokeMMO Launcher v1.0.0\n\
  https://pokemmo.eu/\n\n\
- Usage: pokemmo-launcher [option...]\n\n\
+ Usage: pokemmo [option...]\n\n\
  -h                     Display this dialogue\n\
  -H <dir>               Set the PokeMMO directory (Default: $HOME/.pokemmo). 
                         This option is persistent and may be modified in $PKMOLAUNCHERCONFIG \n\
