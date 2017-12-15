@@ -14,7 +14,7 @@ You can call them to duel with you or even watch the fight with other people.
 ---------------------------
 
 To play this game, you need to make a free registration on the official website
-- [Register](https://pokemmo.eu/account)
+- https://pokemmo.eu/account
 
 **Installation dependency: Debian/Ubuntu**
 ------------------------------------------
@@ -28,16 +28,9 @@ Next you need to compile this release.
 **License**
 -----------
 
-(c) Copyright: 2012-2017 PokeMMO.eu <linux@pokemmo.eu>
-License: PokeMMO_Limited_Redistribution_License
+(c) Copyright holder 2012-2017 PokeMMO.eu <linux@pokemmo.eu>
 
-(c) Copyright: 2012-2017 PokeMMO.eu <admin@pokemmo.eu>
-License: PokeMMO_Limited_License
-
-(c) Copyright: 2012-2017 PokeMMO.eu <admin@pokemmo.eu>
-License: PokeMMO_Contribution_License
-
-**Terms of Service:** Visit https://pokemmo.eu
+**Terms of Service:** Visit https://pokemmo.eu/tos
 
 (c) Copyright 2017 Launcher created by Carlos Donizete Froes [a.k.a coringao]
 License: This is free software, licensed under the GPL-3 license.
