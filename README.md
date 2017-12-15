@@ -28,9 +28,12 @@ Next you need to compile this release.
 **License**
 -----------
 
-(c) Copyright holder 2012-2017 PokeMMO.eu <linux@pokemmo.eu>
+(c) Copyright holder 2012-2017 PokeMMO.eu - <linux@pokemmo.eu>
 
 **Terms of Service:** Visit https://pokemmo.eu/tos
 
 (c) Copyright 2017 Launcher created by Carlos Donizete Froes [a.k.a coringao]
-License: This is free software, licensed under the GPL-3 license.
+
+This is free software, you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation,
+either version 3 of the License, or any later version.
