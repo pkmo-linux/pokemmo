@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=PokeMMO
+Comment=Online game based on the Pokemon universe
+Exec=pokemmo
+Keywords=game;adventure;MMORPG;multiplayer;online;fantasy;emulator;pokemon;
+Terminal=false
+Type=Application
+Icon=pokemmo
+Categories=Game;AdventureGame;Emulator;RolePlaying;
