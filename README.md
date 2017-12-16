@@ -25,10 +25,30 @@ When all these dependencies have installed, simply run the script.
 
 Next you need to compile this release.
 
+**Compilation**
+---------------
+
+To build game, do from the source directory:
+
+    $ make clean && make
+
+Once the compilation has finished, execute the created binary:
+
+    $ ./pokemmo
+
+**Make Install and Make Uninstall**
+-----------------------------------
+
+In this second option it will be installed as root:
+
+    # make install
+    
+    # make uninstall
+
 **License**
 -----------
 
-(c) Copyright holder 2012-2017 PokeMMO.eu - <linux@pokemmo.eu>
+(c) Copyright holder 2012-2017 **PokeMMO.eu** - <linux@pokemmo.eu>
 
 **Terms of Service:** Visit https://pokemmo.eu/tos
 
