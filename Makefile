@@ -23,14 +23,17 @@ DESKTOP = pokemmo.desktop
 CP = cp -r
 RM = rm -r
 MD = mkdir -p
+ECHO = echo
 CHMOD = chmod 755
 
 all:
 	@$(CP) "$(SRCDIR)/$(SCRIPT)" "$(EXE)"
 	@$(CHMOD) "$(EXE)"
+	@$(ECHO) "Created executable script successfully"
 
 clean:
-	rm -r $(EXE)
+	@$(RM) $(EXE)
+	@$(ECHO) "Removed script executable successfully"
 
 install: all
 	@$(MD) "$(BINDIR)"
@@ -41,9 +44,11 @@ install: all
 	@$(CP) "$(SRCDIR)/$(ICON)" "$(ICNDIR)"
 	@$(MD) "$(APPDIR)"
 	@$(CP) "$(SRCDIR)/$(DESKTOP)" "$(APPDIR)"
+	@$(ECHO) "Installed the files successfully"
 
 uninstall: clean
 	@$(RM) "$(BINDIR)/$(EXE)" "$(GAMEDIR)/$(EXE)"
 	@$(RM) "$(ICNDIR)/$(ICON)" "$(APPDIR)/$(DESKTOP)"
+	@$(ECHO) "Successfully removed"
 
 .PHONY: all clean install uninstall
