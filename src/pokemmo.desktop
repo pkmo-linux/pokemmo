@@ -2,7 +2,7 @@
 Name=PokeMMO
 Comment=Online game based on the Pokemon universe
 Exec=pokemmo
-Keywords=game;adventure;MMORPG;multiplayer;online;fantasy;emulator;pokemon;
+Keywords=game;adventure;MMO;multiplayer;online;fantasy;emulator;
 Terminal=false
 Type=Application
 Icon=pokemmo
