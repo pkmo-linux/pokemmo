@@ -4,7 +4,7 @@
 #	- The permitted usage of the PokeMMO game client is defined by
 #	a non-free license. Visit https://pokemmo.eu/tos
 #
-#	(c) Copyright 2017 Launch edited by Carlos Donizete Froes
+#	(c) Copyright 2017 Launch edited by Carlos Donizete Froes [a.k.a coringao]
 #	This is free software, licensed under the GPL-3 license.
 #
 # Script Name: pokemmo.sh
