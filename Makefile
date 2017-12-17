@@ -20,11 +20,11 @@ DATA = pokemmo_bootstrapper.jar
 ICON = pokemmo.png
 DESKTOP = pokemmo.desktop
 
-CP = cp -r
-RM = rm -r
+CP = cp -f
+RM = rm -f
 MD = mkdir -p
 ECHO = echo
-CHMOD = chmod 755 -R
+CHMOD = chmod 755
 
 all:
 	@$(CP) "$(SRCDIR)/$(SCRIPT)" "$(EXE)"
