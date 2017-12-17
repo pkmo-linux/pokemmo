@@ -24,7 +24,7 @@ CP = cp -r
 RM = rm -r
 MD = mkdir -p
 ECHO = echo
-CHMOD = chmod 755
+CHMOD = chmod 755 -R
 
 all:
 	@$(CP) "$(SRCDIR)/$(SCRIPT)" "$(EXE)"
