@@ -9,14 +9,29 @@ battles and group missions.
 
 You can call them to duel with you or even watch the fight with other people.
 
-**Free to Play - Register**
----------------------------
+**Register**
+------------
 
 PokeMMO is a free to play mmorpg, come join a growing community as you level
 up and discover new monsters.
 
 To play this game, you need to make a free registration on the official website
 - https://pokemmo.eu/account
+
+**Important Request**
+---------------------
+
+This program downloads and installs the PokeMMO client to a user's home directory.
+
+You need to enter in the hidden personal directory (**$HOME/.pokemmo/roms**)
+the roms of the games in the versions **Game Boy Advance** and **Nintendo DS**.
+
+ * Current Required Compatible ROMS: Black/White 1
+ * Current Optional Content Compatible ROMS: Fire Red, Emerald
+ * Current Optional Visuals Compatible ROMS: HeartGold, SoulSilver
+
+> **You must have the legal right to use that rom. We will not supply you with
+> the roms, or help you find them as they are copyrighted.** 
 
 **Installation dependency: Debian/Ubuntu**
 ------------------------------------------
@@ -44,6 +59,10 @@ Once the compilation has finished, execute the created binary:
 In this second option it will be installed as root:
 
     # make install
+
+Once completed, it will appear in the application menu.
+
+To make the removal, within the compiled directory, execute this command:
     
     # make uninstall
 
