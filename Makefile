@@ -21,7 +21,7 @@ ICON = pokemmo.png
 DESKTOP = pokemmo.desktop
 
 CP = cp -f
-RM = rm -f
+RM = rm -rf
 MD = mkdir -p
 ECHO = echo
 CHMOD = chmod 755
