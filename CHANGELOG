@@ -7,8 +7,34 @@
 #	This is free software, licensed under the GPL-3 license.
 ###############################################################################
 
-**version: 1.0.0**
+**version: 1.4.1**
  * Acquired originally from the official site
- * Added game manpage
+ * Modified script name: 'pokemmo-launch' for 'pokemmo.sh'
+ * Imported from the official package the file "bootstrapper"
+ * Reinscribed the game manpage
  * Added desktop file
  * Added official icon in format (png) size 512 pixels
+
+**version: 1.4.0**
+ * Update bootstrapper to version 15/12/2017
+ * Fixes Java 9 compatibility on certain platforms (Deb Buster, etc.)
+
+**version: 1.3.0**
+ * Update bootstrapper to version 19/08/2017
+ * Reduce default heap RAM to 384M
+ * Fix Error 4 permission check
+ * Add persistent config for home directory (-H)
+ * Add: --debug --swr --skip-java-ram-opts
+ * Change: -r to --reverify
+
+**version: 1.2.0**
+ * Fix various issues with file integrity checks
+ * Update bootstrapper to version 23/12/2016
+ * Add -H
+
+**version: 1.1.0**
+ * Fix POSIX compliancy for main launcher script
+ * Fix installation for gnome-software
+
+**version: 1.0.0**
+ * Initial release
