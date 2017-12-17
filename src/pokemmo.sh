@@ -7,9 +7,9 @@
 #	(c) Copyright 2017 Launch edited by Carlos Donizete Froes [a.k.a coringao]
 #	This is free software, licensed under the GPL-3 license.
 #
-# Script Name: pokemmo.sh
-# Version: 1.0.0
-#
+# Modified script name:	'pokemmo-launch' for 'pokemmo.sh'
+# Edited version: '1.4.1'
+
 getLauncherConfig() {
     while read i; do
         case $i in
@@ -28,12 +28,12 @@ JAVA_OPTS=()
 case "$1" in
     client)
         if [[ ! $SKIPJAVARAMOPTS ]]; then
-            JAVA_OPTS=(-Xms256M)
+            JAVA_OPTS=(-Xms128M)
 
             if [ -f "$POKEMMO/PokeMMO.l4j.ini" ]; then
-                JAVA_OPTS+=($(grep -oE "\-Xmx[0-9]{1,4}(M|G)" "$POKEMMO/PokeMMO.l4j.ini" || echo -- "-Xmx512M"))
+                JAVA_OPTS+=($(grep -oE "\-Xmx[0-9]{1,4}(M|G)" "$POKEMMO/PokeMMO.l4j.ini" || echo -- "-Xmx384M"))
             else
-                JAVA_OPTS+=(-Xmx512M)
+                JAVA_OPTS+=(-Xmx384M)
             fi
         fi
 
@@ -120,7 +120,7 @@ fi
 if [[ ! -z "$XDG_CONFIG_HOME" ]]; then
     PKMOLAUNCHERCONFIG="$XDG_CONFIG_HOME/pokemmo"
 else
-    PKMOLAUNCHERCONFIG="$HOME/.pokemmo/pokemmo"
+    PKMOLAUNCHERCONFIG="$HOME/.config/pokemmo"
 fi
 
 export TEXTDOMAIN=pokemmo
@@ -143,11 +143,11 @@ while getopts "vhH:-:" opt; do
            PS4='Line ${LINENO}: '
         ;;
         h) printf "\
- PokeMMO Launcher v1.0.0\n\
+ PokeMMO Linux Launcher v1.4\n\
  https://pokemmo.eu/\n\n\
  Usage: pokemmo [option...]\n\n\
  -h                     Display this dialogue\n\
- -H <dir>               Set the PokeMMO directory (Default: $HOME/.pokemmo). 
+ -H <dir>               Set the PokeMMO directory (Default: $HOME/.pokemmo).
                         This option is persistent and may be modified in $PKMOLAUNCHERCONFIG \n\
  -v                     Print verbose status to stdout\n
  --debug                Enable java debug logs\n\
