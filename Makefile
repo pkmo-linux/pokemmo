@@ -47,8 +47,10 @@ install: all
 	@$(ECHO) "Installed the files successfully"
 
 uninstall: clean
-	@$(RM) "$(BINDIR)/$(EXE)" "$(GAMEDIR)/$(EXE)"
-	@$(RM) "$(ICNDIR)/$(ICON)" "$(APPDIR)/$(DESKTOP)"
+	@$(RM) "$(BINDIR)/$(EXE)"
+	@$(RM) "$(GAMEDIR)/$(EXE)"
+	@$(RM) "$(ICNDIR)/$(ICON)"
+	@$(RM) "$(APPDIR)/$(DESKTOP)"
 	@$(ECHO) "Successfully removed"
 
 .PHONY: all clean install uninstall
