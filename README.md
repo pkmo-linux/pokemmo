@@ -23,12 +23,12 @@ To play this game, you need to make a free registration on the official website
 
 This program downloads and installs the PokeMMO client to a user's home directory.
 
-You need to enter in the hidden personal directory (**$HOME/.pokemmo/roms**)
+You need to enter in the hidden personal directory (**$HOME/.local/share/pokemmo/roms**)
 the roms of the games in the versions **Game Boy Advance** and **Nintendo DS**.
 
- * Current Required Compatible ROMS: Black/White 1
- * Current Optional Content Compatible ROMS: Fire Red, Emerald
- * Current Optional Visuals Compatible ROMS: HeartGold, SoulSilver
+ * Current Required Compatible ROMS: Black/White 1 (NDS)
+ * Current Optional Content Compatible ROMS: Fire Red, Emerald (GBA)
+ * Current Optional Visuals Compatible ROMS: HeartGold, SoulSilver (NDS)
 
 > **You must have the legal right to use that rom. We will not supply you with
 > the roms, or help you find them as they are copyrighted.** 
