@@ -105,7 +105,7 @@ fi
 if [[ ! -r "$POKEMMO" || ! -w "$POKEMMO" || ! -x "$POKEMMO" || ! "$PKMO_IS_INSTALLED" || ! -f "$POKEMMO/PokeMMO.exe" || ! -d "$POKEMMO/data" || ! -d "$POKEMMO/lib" ]]; then
     showMessage --warn $"(Error 1) The installation is in a corrupt state.\n\nReverifying the game files."
     # Try to fix permissions before erroring out
-    (find "$POKEMMO" -type d -exec chmod u+rwx {} + && find "$POKEMMO" -type f -exec chmod u+rw {} +) || showMessage --error $"(Error 4) Could not fix permissions of $POKEMMO.\n\nContact PokeMMO support."
+    (chmod u+rwx "$POKEMMO" && find "$POKEMMO" -type d -exec chmod u+rwx {} + && find "$POKEMMO" -type f -exec chmod u+rw {} +) || showMessage --error $"(Error 4) Could not fix permissions of $POKEMMO.\n\nContact PokeMMO support."
     downloadPokemmo
     return
 fi
