@@ -1,24 +1,24 @@
 #!/bin/bash
 #
-#	(c) Copyright holder 2012-2017 PokeMMO.eu <linux@pokemmo.eu>
-#	- The permitted usage of the PokeMMO game client is defined by
-#	a non-free license. Visit https://pokemmo.eu/tos
+#    (c) Copyright holder 2012-2017 PokeMMO.eu <linux@pokemmo.eu>
+#    - The permitted usage of the PokeMMO game client is defined by
+#    a non-free license. Visit https://pokemmo.eu/tos
 #
-#	(c) Copyright 2017 Launch edited by Carlos Donizete Froes [a.k.a coringao]
-#	This is free software, licensed under the GPL-3 license.
+#    (c) Copyright 2017 Launch edited by Carlos Donizete Froes [a.k.a coringao]
+#    This is free software, licensed under the GPL-3 license.
 #
-# Modified script name:	'pokemmo-launch' for 'pokemmo.sh'
+# Modified script name:    'pokemmo-launch' for 'pokemmo.sh'
 # Edited version: '1.4.2'
 
 getLauncherConfig() {
-	while read i; do
-		case $i in
-			installed=1) PKMO_IS_INSTALLED=1 ;;
-			debugs=1) PKMO_CREATE_DEBUGS=1 ;;
-			swr=1) export LIBGL_ALWAYS_SOFTWARE=1 ;;
-			*) continue ;;
-		esac
-	done <"$PKMOCONFIGDIR/pokemmo"
+    while read i; do
+        case $i in
+            installed=1) PKMO_IS_INSTALLED=1 ;;
+            debugs=1) PKMO_CREATE_DEBUGS=1 ;;
+            swr=1) export LIBGL_ALWAYS_SOFTWARE=1 ;;
+            *) continue ;;
+        esac
+    done <"$PKMOCONFIGDIR/pokemmo"
 }
 
 getJavaOpts() {
@@ -114,17 +114,17 @@ fi
 [[ ! "$(command -v java)" ]] && showMessage --error "(Error 6) Java is not installed or is not executable. Exiting.."
 
 if [[ ! -z "$XDG_CONFIG_HOME" ]]; then
-	PKMOCONFIGDIR="$XDG_CONFIG_HOME/pokemmo"
+    PKMOCONFIGDIR="$XDG_CONFIG_HOME/pokemmo"
 else
-	PKMOCONFIGDIR="$HOME/.config/pokemmo"
+    PKMOCONFIGDIR="$HOME/.config/pokemmo"
 fi
 
 if [ ! -d "$PKMOCONFIGDIR" ]; then
-	if [[ -e "$PKMOCONFIGDIR" || -L "$PKMOCONFIGDIR" ]]; then
-		showMessage --error "(Error 9) The configuration directory ($PKMOCONFIGDIR) already exists,\nbut is not a directory.\n\nMove or delete this file and try again."
-	else
-		mkdir -p "$PKMOCONFIGDIR"
-	fi
+    if [[ -e "$PKMOCONFIGDIR" || -L "$PKMOCONFIGDIR" ]]; then
+        showMessage --error "(Error 9) The configuration directory ($PKMOCONFIGDIR) already exists,\nbut is not a directory.\n\nMove or delete this file and try again."
+    else
+        mkdir -p "$PKMOCONFIGDIR"
+    fi
 fi
 
 while getopts "vhH:-:" opt; do
@@ -154,8 +154,8 @@ while getopts "vhH:-:" opt; do
            exit
         ;;
         H) mkdir -p "$OPTARG" || continue
-		   echo "$OPTARG" > "$PKMOCONFIGDIR/pokemmodir" ;;
-		*) continue ;;
+           echo "$OPTARG" > "$PKMOCONFIGDIR/pokemmodir" ;;
+        *) continue ;;
     esac
 done
 
@@ -166,14 +166,14 @@ done
 [[ -f "$PKMOCONFIGDIR/pokemmo" ]] && getLauncherConfig
 
 if [[ -f "$PKMOCONFIGDIR/pokemmodir" ]]; then
-	POKEMMO=$(head -n1 "$PKMOCONFIGDIR/pokemmodir")
-	[[ ! -d "$POKEMMO" ]] && showMessage --error "(Error 8) The configured directory ($POKEMMO) has become unavailable. Bailing!"
+    POKEMMO=$(head -n1 "$PKMOCONFIGDIR/pokemmodir")
+    [[ ! -d "$POKEMMO" ]] && showMessage --error "(Error 8) The configured directory ($POKEMMO) has become unavailable. Bailing!"
 else
-	if [[ ! -z "$XDG_DATA_HOME" ]]; then
-		POKEMMO="$XDG_DATA_HOME/pokemmo"
-	else
-		POKEMMO="$HOME/.local/share/pokemmo"
-	fi
+    if [[ ! -z "$XDG_DATA_HOME" ]]; then
+        POKEMMO="$XDG_DATA_HOME/pokemmo"
+    else
+        POKEMMO="$HOME/.local/share/pokemmo"
+    fi
 fi
 
 verifyInstallation
