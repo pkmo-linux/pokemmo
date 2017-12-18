@@ -167,7 +167,13 @@ done
 
 getLauncherConfig
 
-[[ -z "$POKEMMO" ]] && POKEMMO="$HOME/.pokemmo"
+if [[ -z "$POKEMMO" ]]; then
+    if [[ ! -z "$XDG_DATA_HOME" ]]; then
+        POKEMMO="$XDG_DATA_HOME/pokemmo"
+    else
+        POKEMMO="$HOME/.local/share/pokemmo"
+    fi
+fi
 
 verifyInstallation
 
