@@ -8,17 +8,17 @@
 #	This is free software, licensed under the GPL-3 license.
 #
 # Modified script name:	'pokemmo-launch' for 'pokemmo.sh'
-# Edited version: '1.4.1'
+# Edited version: '1.4.2'
 
 getLauncherConfig() {
-    while read i; do
-        case $i in
-            installed=1) PKMO_IS_INSTALLED=1 ;;
-            debugs=1) PKMO_CREATE_DEBUGS=1 ;;
-            homedir=*) POKEMMO=$(echo "$i" | cut -c9-) ;;
-            *) continue ;;
-        esac
-    done <"$PKMOLAUNCHERCONFIG"
+	while read i; do
+		case $i in
+			installed=1) PKMO_IS_INSTALLED=1 ;;
+			debugs=1) PKMO_CREATE_DEBUGS=1 ;;
+			swr=1) export LIBGL_ALWAYS_SOFTWARE=1 ;;
+			*) continue ;;
+		esac
+	done <"$PKMOCONFIGDIR/pokemmo"
 }
 
 getJavaOpts() {
@@ -38,7 +38,7 @@ case "$1" in
         fi
 
         [[ $PKMO_CREATE_DEBUGS ]] && JAVA_OPTS+=(-XX:+UnlockDiagnosticVMOptions -XX:+LogVMOutput -XX:LogFile=client_jvm.log)
-        [[ $PKMO_CREATE_DEBUGS && $LIBGL_ALWAYS_SOFTWARE ]] && JAVA_OPTS+=(-Dorg.lwjgl.opengl.Display.allowSoftwareOpenGL=true)
+        [[ $LIBGL_ALWAYS_SOFTWARE ]] && JAVA_OPTS+=(-Dorg.lwjgl.opengl.Display.allowSoftwareOpenGL=true)
     ;;
     updater)
         [[ ! $SKIPJAVARAMOPTS ]] && JAVA_OPTS=(-Xms64M -Xmx128M)
@@ -72,21 +72,15 @@ showMessage() {
 }
 
 downloadPokemmo() {
-  rm -f "$PKMOLAUNCHERCONFIG"
+  rm -f "$PKMOCONFIGDIR/pokemmo"
   find "$POKEMMO" -type f -name "*.TEMPORARY" -exec rm -f {} +
   cp -f src/pokemmo_bootstrapper.jar "$POKEMMO/"
   cp -f /usr/share/games/pokemmo/pokemmo_bootstrapper.jar "$POKEMMO/"
 
   # Updater exits with 1 on successful update
   getJavaOpts "updater"
-  (cd "$POKEMMO" && java ${JAVA_OPTS[*]} -cp ./pokemmo_bootstrapper.jar com.pokeemu.updater.ClientUpdater -install -quick) && exit 1 || echo "installed=1" >> "$PKMOLAUNCHERCONFIG"
+  (cd "$POKEMMO" && java ${JAVA_OPTS[*]} -cp ./pokemmo_bootstrapper.jar com.pokeemu.updater.ClientUpdater -install -quick) && exit 1 || echo "installed=1" > "$PKMOCONFIGDIR/pokemmo"
   rm -f "$POKEMMO/pokemmo_bootstrapper.jar"
-
-  if [[ $PKMO_IS_INSTALLED ]]; then
-      # Rebuild the launcher config
-      [[ $PKMO_CREATE_DEBUGS ]] && echo "debugs=1" >> "$PKMOLAUNCHERCONFIG"
-      [[ $POKEMMO ]] && echo "homedir=$POKEMMO" >> "$PKMOLAUNCHERCONFIG"
-  fi
 }
 
 verifyInstallation() {
@@ -117,18 +111,21 @@ fi
 # Environment checks #
 ######################
 
+[[ ! "$(command -v java)" ]] && showMessage --error "(Error 6) Java is not installed or is not executable. Exiting.."
+
 if [[ ! -z "$XDG_CONFIG_HOME" ]]; then
-    PKMOLAUNCHERCONFIG="$XDG_CONFIG_HOME/pokemmo"
+	PKMOCONFIGDIR="$XDG_CONFIG_HOME/pokemmo"
 else
-    PKMOLAUNCHERCONFIG="$HOME/.config/pokemmo"
+	PKMOCONFIGDIR="$HOME/.config/pokemmo"
 fi
 
-export TEXTDOMAIN=pokemmo
-export TEXTDOMAINDIR="/usr/share/locale/"
-
-if [[ ! -d "$HOME" || ! -r "$HOME" || ! -w "$HOME" || ! -x "$HOME" ]]; then showMessage --error "(Error 5) $HOME is not accessible. Exiting.." ; fi
-
-[[ ! "$(command -v java)" ]] && showMessage --error "(Error 6) Java is not installed or is not executable. Exiting.."
+if [ ! -d "$PKMOCONFIGDIR" ]; then
+	if [[ -e "$PKMOCONFIGDIR" || -L "$PKMOCONFIGDIR" ]]; then
+		showMessage --error "(Error 9) The configuration directory ($PKMOCONFIGDIR) already exists,\nbut is not a directory.\n\nMove or delete this file and try again."
+	else
+		mkdir -p "$PKMOCONFIGDIR"
+	fi
+fi
 
 while getopts "vhH:-:" opt; do
     case $opt in
@@ -147,8 +144,8 @@ while getopts "vhH:-:" opt; do
  https://pokemmo.eu/\n\n\
  Usage: pokemmo [option...]\n\n\
  -h                     Display this dialogue\n\
- -H <dir>               Set the PokeMMO directory (Default: $HOME/.pokemmo).
-                        This option is persistent and may be modified in $PKMOLAUNCHERCONFIG \n\
+ -H <dir>               Set the PokeMMO directory (Default: $HOME/.local/share/pokemmo).
+                        This option is persistent and may be modified in $PKMOCONFIGDIR/pokemmodir \n\
  -v                     Print verbose status to stdout\n
  --debug                Enable java debug logs\n\
  --swr                  Try to fallback to an available software renderer\n\
@@ -156,8 +153,9 @@ while getopts "vhH:-:" opt; do
  --skip-java-ram-opts   Use the operating system's default RAM options instead of the suggested values\n"
            exit
         ;;
-        H) POKEMMO="$OPTARG"
-           echo "homedir=$OPTARG" >> "$PKMOLAUNCHERCONFIG";;
+        H) mkdir -p "$OPTARG" || continue
+		   echo "$OPTARG" > "$PKMOCONFIGDIR/pokemmodir" ;;
+		*) continue ;;
     esac
 done
 
@@ -165,14 +163,17 @@ done
 # Start PokeMMO #
 #################
 
-getLauncherConfig
+[[ -f "$PKMOCONFIGDIR/pokemmo" ]] && getLauncherConfig
 
-if [[ -z "$POKEMMO" ]]; then
-    if [[ ! -z "$XDG_DATA_HOME" ]]; then
-        POKEMMO="$XDG_DATA_HOME/pokemmo"
-    else
-        POKEMMO="$HOME/.local/share/pokemmo"
-    fi
+if [[ -f "$PKMOCONFIGDIR/pokemmodir" ]]; then
+	POKEMMO=$(head -n1 "$PKMOCONFIGDIR/pokemmodir")
+	[[ ! -d "$POKEMMO" ]] && showMessage --error "(Error 8) The configured directory ($POKEMMO) has become unavailable. Bailing!"
+else
+	if [[ ! -z "$XDG_DATA_HOME" ]]; then
+		POKEMMO="$XDG_DATA_HOME/pokemmo"
+	else
+		POKEMMO="$HOME/.local/share/pokemmo"
+	fi
 fi
 
 verifyInstallation
