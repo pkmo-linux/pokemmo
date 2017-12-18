@@ -93,19 +93,19 @@ verifyInstallation() {
 if [ ! -d "$POKEMMO" ]; then
   if [[ -e "$POKEMMO" || -L "$POKEMMO" ]]; then
     # Could also be a broken symlink
-    showMessage --error $"(Error 3) Could not install to $POKEMMO\n\n$POKEMMO already exists,\nbut is not a directory.\n\nMove or delete this file and try again."
+    showMessage --error "(Error 3) Could not install to $POKEMMO\n\n$POKEMMO already exists,\nbut is not a directory.\n\nMove or delete this file and try again."
   else
     mkdir -p "$POKEMMO"
-    showMessage --info $"PokeMMO is being installed to $POKEMMO"
+    showMessage --info "PokeMMO is being installed to $POKEMMO"
     downloadPokemmo
     return
   fi
 fi
 
 if [[ ! -r "$POKEMMO" || ! -w "$POKEMMO" || ! -x "$POKEMMO" || ! "$PKMO_IS_INSTALLED" || ! -f "$POKEMMO/PokeMMO.exe" || ! -d "$POKEMMO/data" || ! -d "$POKEMMO/lib" ]]; then
-    showMessage --warn $"(Error 1) The installation is in a corrupt state.\n\nReverifying the game files."
+    showMessage --warn "(Error 1) The installation is in a corrupt state.\n\nReverifying the game files."
     # Try to fix permissions before erroring out
-    (chmod u+rwx "$POKEMMO" && find "$POKEMMO" -type d -exec chmod u+rwx {} + && find "$POKEMMO" -type f -exec chmod u+rw {} +) || showMessage --error $"(Error 4) Could not fix permissions of $POKEMMO.\n\nContact PokeMMO support."
+    (chmod u+rwx "$POKEMMO" && find "$POKEMMO" -type d -exec chmod u+rwx {} + && find "$POKEMMO" -type f -exec chmod u+rw {} +) || showMessage --error "(Error 4) Could not fix permissions of $POKEMMO.\n\nContact PokeMMO support."
     downloadPokemmo
     return
 fi
@@ -126,9 +126,9 @@ fi
 export TEXTDOMAIN=pokemmo
 export TEXTDOMAINDIR="/usr/share/locale/"
 
-if [[ ! -d "$HOME" || ! -r "$HOME" || ! -w "$HOME" || ! -x "$HOME" ]]; then showMessage --error $"(Error 5) $HOME is not accessible. Exiting.." ; fi
+if [[ ! -d "$HOME" || ! -r "$HOME" || ! -w "$HOME" || ! -x "$HOME" ]]; then showMessage --error "(Error 5) $HOME is not accessible. Exiting.." ; fi
 
-[[ ! "$(command -v java)" ]] && showMessage --error $"(Error 6) Java is not installed or is not executable. Exiting.."
+[[ ! "$(command -v java)" ]] && showMessage --error "(Error 6) Java is not installed or is not executable. Exiting.."
 
 while getopts "vhH:-:" opt; do
     case $opt in
