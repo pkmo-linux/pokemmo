@@ -7,6 +7,10 @@
 #	This is free software, licensed under the GPL-3 license.
 ###############################################################################
 
+**version: 1.4.2**
+ * Better support for XDG folders and arbitrary directories
+ * Fix repairing when top directory is -x
+
 **version: 1.4.1**
  * Acquired originally from the official site
  * Modified script name: 'pokemmo-launch' for 'pokemmo.sh'
