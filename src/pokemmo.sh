@@ -10,15 +10,28 @@
 # Modified script name:    'pokemmo-launch' for 'pokemmo.sh'
 # Edited version: '1.4.2'
 
+getCanDebug() {
+
+if [[ $(which jps) ]]; then
+    PKMO_CREATE_DEBUGS=1 
+else
+    echo "Debug mode is unavailable. Please install the Java Development Kit and ensure jps is in your PATH"
+    return 1
+fi
+
+}
+
 getLauncherConfig() {
-    while read i; do
-        case $i in
-            installed=1) PKMO_IS_INSTALLED=1 ;;
-            debugs=1) PKMO_CREATE_DEBUGS=1 ;;
-            swr=1) export LIBGL_ALWAYS_SOFTWARE=1 ;;
-            *) continue ;;
-        esac
-    done <"$PKMOCONFIGDIR/pokemmo"
+
+while read i; do
+    case $i in
+        installed=1) PKMO_IS_INSTALLED=1 ;;
+        debugs=1) getCanDebug ;;
+        swr=1) export LIBGL_ALWAYS_SOFTWARE=1 ;;
+        *) continue ;;
+    esac
+done <"$PKMOCONFIGDIR/pokemmo"
+
 }
 
 getJavaOpts() {
@@ -136,7 +149,7 @@ while getopts "vhH:-:" opt; do
         -) case "$OPTARG" in
                skip-java-ram-opts) SKIPJAVARAMOPTS=1 ;;
                reverify) PKMO_REINSTALL=1 ;;
-               debug) PKMO_CREATE_DEBUGS=1 ;;
+               debug) getCanDebug ;;
                swr) export LIBGL_ALWAYS_SOFTWARE=1 ;;
            esac
         ;;
@@ -187,4 +200,31 @@ fi
 verifyInstallation
 
 getJavaOpts "client"
-cd "$POKEMMO" && java ${JAVA_OPTS[*]} -cp ./lib/*:PokeMMO.exe com.pokeemu.client.Client > /dev/null
+
+if [[ $PKMO_CREATE_DEBUGS ]]; then
+    cd "$POKEMMO" && ( java ${JAVA_OPTS[*]} -cp ./lib/*:PokeMMO.exe com.pokeemu.client.Client > /dev/null ) &
+
+    rm -f "$POKEMMO/client_jvm.log"
+
+    v=0
+    while [ -z "$(jps | grep Client)" ]; do
+        if (( v < 30 )); then
+            sleep 1
+            echo "DEBUG: Slept for $v seconds while waiting for the client to start"
+            v=$(( v + 1 ))
+        else
+            echo "Failed to detect main class Client during debug setup"
+            exit 1
+        fi
+    done
+
+    CLIENT_PID="$(jps | grep Client | tr -d '[:space:][a-zA-Z]')"
+
+    while :; do
+        sleep 3
+        kill -3 "$CLIENT_PID" || break
+        echo "DEBUG: Threads dumped for Client JVM. Sleeping for 3 seconds.."
+    done
+else
+        cd "$POKEMMO" && java ${JAVA_OPTS[*]} -cp ./lib/*:PokeMMO.exe com.pokeemu.client.Client > /dev/null
+fi
