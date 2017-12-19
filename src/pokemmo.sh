@@ -113,10 +113,14 @@ fi
 
 [[ ! "$(command -v java)" ]] && showMessage --error "(Error 6) Java is not installed or is not executable. Exiting.."
 
-if [[ ! -z "$XDG_CONFIG_HOME" ]]; then
+if [[ -d "$XDG_CONFIG_HOME" ]]; then
     PKMOCONFIGDIR="$XDG_CONFIG_HOME/pokemmo"
 else
-    PKMOCONFIGDIR="$HOME/.config/pokemmo"
+    if [[ ! -e "$XDG_CONFIG_HOME" && -L "$XDG_CONFIG_HOME" ]]; then
+        showMessage --error "(Error 10) The configuration directory ($XDG_CONFIG_HOME/pokemmo) is disconnected.\n\nPlease update your symlink and restart the program."
+    else
+        PKMOCONFIGDIR="$HOME/.config/pokemmo"
+    fi
 fi
 
 if [ ! -d "$PKMOCONFIGDIR" ]; then
@@ -169,10 +173,14 @@ if [[ -f "$PKMOCONFIGDIR/pokemmodir" ]]; then
     POKEMMO=$(head -n1 "$PKMOCONFIGDIR/pokemmodir")
     [[ ! -d "$POKEMMO" ]] && showMessage --error "(Error 8) The configured directory ($POKEMMO) has become unavailable. Bailing!"
 else
-    if [[ ! -z "$XDG_DATA_HOME" ]]; then
+    if [[ -d "$XDG_DATA_HOME" ]]; then
         POKEMMO="$XDG_DATA_HOME/pokemmo"
     else
-        POKEMMO="$HOME/.local/share/pokemmo"
+        if [[ ! -e "$XDG_DATA_HOME" && -L "$XDG_DATA_HOME" ]]; then
+            showMessage --error "(Error 11) The XDG_DATA_HOME directory ($XDG_DATA_HOME/pokemmo) is disconnected.\n\nPlease update your symlink and restart the program."
+        else
+            POKEMMO="$HOME/.local/share/pokemmo"
+        fi
     fi
 fi
 
