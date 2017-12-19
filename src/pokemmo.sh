@@ -74,7 +74,7 @@ showMessage() {
 downloadPokemmo() {
   rm -f "$PKMOCONFIGDIR/pokemmo"
   find "$POKEMMO" -type f -name "*.TEMPORARY" -exec rm -f {} +
-  cp -f src/pokemmo_bootstrapper.jar "$POKEMMO/"
+
   cp -f /usr/share/games/pokemmo/pokemmo_bootstrapper.jar "$POKEMMO/"
 
   # Updater exits with 1 on successful update
