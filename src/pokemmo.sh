@@ -8,17 +8,30 @@
 #    This is free software, licensed under the GPL-3 license.
 #
 # Modified script name:    'pokemmo-launch' for 'pokemmo.sh'
-# Edited version: '1.4.2'
+# Edited version: '1.4.3'
+
+getCanDebug() {
+
+if [[ $(which jps) ]]; then
+    PKMO_CREATE_DEBUGS=1 
+else
+    echo "Debug mode is unavailable. Please install the Java Development Kit and ensure jps is in your PATH"
+    return 1
+fi
+
+}
 
 getLauncherConfig() {
-    while read i; do
-        case $i in
-            installed=1) PKMO_IS_INSTALLED=1 ;;
-            debugs=1) PKMO_CREATE_DEBUGS=1 ;;
-            swr=1) export LIBGL_ALWAYS_SOFTWARE=1 ;;
-            *) continue ;;
-        esac
-    done <"$PKMOCONFIGDIR/pokemmo"
+
+while read i; do
+    case $i in
+        installed=1) PKMO_IS_INSTALLED=1 ;;
+        debugs=1) getCanDebug ;;
+        swr=1) export LIBGL_ALWAYS_SOFTWARE=1 ;;
+        *) continue ;;
+    esac
+done <"$PKMOCONFIGDIR/pokemmo"
+
 }
 
 getJavaOpts() {
@@ -74,7 +87,7 @@ showMessage() {
 downloadPokemmo() {
   rm -f "$PKMOCONFIGDIR/pokemmo"
   find "$POKEMMO" -type f -name "*.TEMPORARY" -exec rm -f {} +
-  cp -f src/pokemmo_bootstrapper.jar "$POKEMMO/"
+
   cp -f /usr/share/games/pokemmo/pokemmo_bootstrapper.jar "$POKEMMO/"
 
   # Updater exits with 1 on successful update
@@ -113,10 +126,14 @@ fi
 
 [[ ! "$(command -v java)" ]] && showMessage --error "(Error 6) Java is not installed or is not executable. Exiting.."
 
-if [[ ! -z "$XDG_CONFIG_HOME" ]]; then
+if [[ -d "$XDG_CONFIG_HOME" ]]; then
     PKMOCONFIGDIR="$XDG_CONFIG_HOME/pokemmo"
 else
-    PKMOCONFIGDIR="$HOME/.config/pokemmo"
+    if [[ ! -e "$XDG_CONFIG_HOME" && -L "$XDG_CONFIG_HOME" ]]; then
+        showMessage --error "(Error 10) The configuration directory ($XDG_CONFIG_HOME/pokemmo) is disconnected.\n\nPlease update your symlink and restart the program."
+    else
+        PKMOCONFIGDIR="$HOME/.config/pokemmo"
+    fi
 fi
 
 if [ ! -d "$PKMOCONFIGDIR" ]; then
@@ -132,7 +149,7 @@ while getopts "vhH:-:" opt; do
         -) case "$OPTARG" in
                skip-java-ram-opts) SKIPJAVARAMOPTS=1 ;;
                reverify) PKMO_REINSTALL=1 ;;
-               debug) PKMO_CREATE_DEBUGS=1 ;;
+               debug) getCanDebug ;;
                swr) export LIBGL_ALWAYS_SOFTWARE=1 ;;
            esac
         ;;
@@ -169,14 +186,45 @@ if [[ -f "$PKMOCONFIGDIR/pokemmodir" ]]; then
     POKEMMO=$(head -n1 "$PKMOCONFIGDIR/pokemmodir")
     [[ ! -d "$POKEMMO" ]] && showMessage --error "(Error 8) The configured directory ($POKEMMO) has become unavailable. Bailing!"
 else
-    if [[ ! -z "$XDG_DATA_HOME" ]]; then
+    if [[ -d "$XDG_DATA_HOME" ]]; then
         POKEMMO="$XDG_DATA_HOME/pokemmo"
     else
-        POKEMMO="$HOME/.local/share/pokemmo"
+        if [[ ! -e "$XDG_DATA_HOME" && -L "$XDG_DATA_HOME" ]]; then
+            showMessage --error "(Error 11) The XDG_DATA_HOME directory ($XDG_DATA_HOME/pokemmo) is disconnected.\n\nPlease update your symlink and restart the program."
+        else
+            POKEMMO="$HOME/.local/share/pokemmo"
+        fi
     fi
 fi
 
 verifyInstallation
 
 getJavaOpts "client"
-cd "$POKEMMO" && java ${JAVA_OPTS[*]} -cp ./lib/*:PokeMMO.exe com.pokeemu.client.Client > /dev/null
+
+if [[ $PKMO_CREATE_DEBUGS ]]; then
+    cd "$POKEMMO" && ( java ${JAVA_OPTS[*]} -cp ./lib/*:PokeMMO.exe com.pokeemu.client.Client > /dev/null ) &
+
+    rm -f "$POKEMMO/client_jvm.log"
+
+    v=0
+    while [ -z "$(jps | grep Client)" ]; do
+        if (( v < 30 )); then
+            sleep 1
+            echo "DEBUG: Slept for $v seconds while waiting for the client to start"
+            v=$(( v + 1 ))
+        else
+            echo "Failed to detect main class Client during debug setup"
+            exit 1
+        fi
+    done
+
+    CLIENT_PID="$(jps | grep Client | tr -d '[:space:][a-zA-Z]')"
+
+    while :; do
+        sleep 3
+        kill -3 "$CLIENT_PID" || break
+        echo "DEBUG: Threads dumped for Client JVM. Sleeping for 3 seconds.."
+    done
+else
+        cd "$POKEMMO" && java ${JAVA_OPTS[*]} -cp ./lib/*:PokeMMO.exe com.pokeemu.client.Client > /dev/null
+fi
