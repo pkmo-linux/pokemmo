@@ -7,6 +7,10 @@
 #	This is free software, licensed under the GPL-3 license.
 ###############################################################################
 
+**version: 1.4.3**
+ * Fixed an issue where XDG directories could be invalid
+ * Improved support for game client debugging (-debug)
+
 **version: 1.4.2**
  * Better support for XDG folders and arbitrary directories
  * Fix repairing when top directory is -x
