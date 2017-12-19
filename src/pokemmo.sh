@@ -8,7 +8,7 @@
 #    This is free software, licensed under the GPL-3 license.
 #
 # Modified script name:    'pokemmo-launch' for 'pokemmo.sh'
-# Edited version: '1.4.2'
+# Edited version: '1.4.3'
 
 getCanDebug() {
 
