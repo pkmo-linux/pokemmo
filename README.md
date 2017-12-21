@@ -26,9 +26,9 @@ This program downloads and installs the PokeMMO client to a user's home director
 You need to enter in the hidden personal directory (**$HOME/.local/share/pokemmo/roms**)
 the roms of the games in the versions **Game Boy Advance** and **Nintendo DS**.
 
- * Current Required Compatible ROMS: **Black/White 1** (NDS)
- * Current Optional Content Compatible ROMS: **Fire Red, Emerald** (GBA)
- * Current Optional Visuals Compatible ROMS: **HeartGold, SoulSilver** (NDS)
+ * Current Required Compatible ROMS: Black/White 1 (NDS)
+ * Current Optional Content Compatible ROMS: Fire Red, Emerald (GBA)
+ * Current Optional Visuals Compatible ROMS: HeartGold, SoulSilver (NDS)
 
 > **You must have the legal right to use that rom. We will not supply you with
 > the roms, or help you find them as they are copyrighted.** 
@@ -51,7 +51,7 @@ To build game, do from the source directory: (Requires root access for compilati
 
 Once completed, it will appear in the application menu or run the created binary:
 
-   $ ./pokemmo
+    $ ./pokemmo
 
 To make the removal, within the compiled directory, execute this command:
     
