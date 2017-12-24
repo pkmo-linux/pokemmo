@@ -33,7 +33,7 @@ the roms of the games in the versions **Game Boy Advance** and **Nintendo DS**.
 > **You must have the legal right to use that rom. We will not supply you with
 > the roms, or help you find them as they are copyrighted.** 
 
-**Installation dependency: Debian/Ubuntu**
+**Installation dependency: Debian/Ubuntu/GNU/Linux**
 ------------------------------------------
 
     # apt install default-jre make zenity
