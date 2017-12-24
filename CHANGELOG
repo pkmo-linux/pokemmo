@@ -10,7 +10,6 @@
 **version: 1.4.3**
  * Fixed an issue where XDG directories could be invalid
  * Improved support for game client debugging (-debug)
- * Updated makefile (requires root access for compilation)
 
 **version: 1.4.2**
  * Better support for XDG folders and arbitrary directories
