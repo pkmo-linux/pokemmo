@@ -26,9 +26,16 @@ MD = mkdir -p
 ECHO = echo
 CHMOD = chmod 755
 
-install:
+all:
 	@$(CP) "$(SRCDIR)/$(SCRIPT)" "$(EXE)"
 	@$(CHMOD) "$(EXE)"
+	@$(ECHO) "Created executable script successfully"
+
+clean:
+	@$(RM) $(EXE)
+	@$(ECHO) "Removed script executable successfully"
+
+install: all
 	@$(MD) "$(BINDIR)"
 	@$(CP) "$(EXE)" "$(BINDIR)"
 	@$(MD) "$(GAMEDIR)/$(EXE)"
@@ -39,12 +46,11 @@ install:
 	@$(CP) "$(SRCDIR)/$(DESKTOP)" "$(APPDIR)"
 	@$(ECHO) "Installed the files successfully"
 
-uninstall:
-	@$(RM) $(EXE)
+uninstall: clean
 	@$(RM) "$(BINDIR)/$(EXE)"
 	@$(RM) "$(GAMEDIR)/$(EXE)"
 	@$(RM) "$(ICNDIR)/$(ICON)"
 	@$(RM) "$(APPDIR)/$(DESKTOP)"
 	@$(ECHO) "Successfully removed"
 
-.PHONY: install uninstall
+.PHONY: all clean install uninstall
