@@ -7,7 +7,7 @@
 #    (c) Copyright 2017 Launch edited by Carlos Donizete Froes [a.k.a coringao]
 #    This is free software, licensed under the GPL-3 license.
 #
-# Modified script name:    'pokemmo-launch' for 'pokemmo.sh'
+# Script name:    'pokemmo.sh'
 # Edited version: '1.4.3'
 
 getCanDebug() {
