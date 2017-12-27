@@ -64,5 +64,5 @@ To make the removal, within the compiled directory, execute this command:
 > the Free Software Foundation, either version 3 of the License,
 > or any later version.
 
-(c) Copyright holder 2012-2017 **PokeMMO.eu** <linux@pokemmo.eu>
-(c) Copyright 2017 Carlos Donizete Froes [a.k.a coringao]
+- (c) Copyright holder 2012-2017 **PokeMMO.eu** <linux@pokemmo.eu>
+- (c) Copyright 2017 Carlos Donizete Froes [a.k.a coringao]
