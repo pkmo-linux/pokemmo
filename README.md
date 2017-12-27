@@ -59,13 +59,10 @@ To make the removal, within the compiled directory, execute this command:
 
 **License**
 -----------
+> This is free software: you can redistribute it and/or modify it under
+> the terms of the GNU General Public License as published by
+> the Free Software Foundation, either version 3 of the License,
+> or any later version.
 
-(c) Copyright holder 2012-2017 **PokeMMO.eu** - <linux@pokemmo.eu>
-
-**Terms of Service:** https://pokemmo.eu/tos
-
-(c) Copyright 2017 Launcher created by Carlos Donizete Froes [a.k.a coringao]
-
-This is free software, you can redistribute it and/or modify it under the terms
-of the GNU General Public License as published by the Free Software Foundation,
-either version 3 of the License, or any later version.
+(c) Copyright holder 2012-2017 **PokeMMO.eu** <linux@pokemmo.eu>
+(c) Copyright 2017 Carlos Donizete Froes [a.k.a coringao]
