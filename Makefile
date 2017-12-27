@@ -13,12 +13,10 @@ EXE = pokemmo
 SRCDIR = src
 PREFIX = $(DESTDIR)/usr
 BINDIR = $(PREFIX)/games
-GAMEDIR = $(PREFIX)/share/games
 ICNDIR = $(PREFIX)/share/pixmaps
 APPDIR = $(PREFIX)/share/applications
 
 SCRIPT = pokemmo.sh
-DATA = pokemmo_bootstrapper.jar
 ICON = pokemmo.png
 DESKTOP = pokemmo.desktop
 
@@ -40,8 +38,6 @@ clean:
 install: all
 	@$(MD) "$(BINDIR)"
 	@$(CP) "$(EXE)" "$(BINDIR)"
-	@$(MD) "$(GAMEDIR)/$(EXE)"
-	@$(CP) "$(SRCDIR)/$(DATA)" "$(GAMEDIR)/$(EXE)"
 	@$(MD) "$(ICNDIR)"
 	@$(CP) "$(SRCDIR)/$(ICON)" "$(ICNDIR)"
 	@$(MD) "$(APPDIR)"
@@ -50,7 +46,6 @@ install: all
 
 uninstall: clean
 	@$(RM) "$(BINDIR)/$(EXE)"
-	@$(RM) "$(GAMEDIR)/$(EXE)"
 	@$(RM) "$(ICNDIR)/$(ICON)"
 	@$(RM) "$(APPDIR)/$(DESKTOP)"
 	@$(ECHO) "Successfully removed"
