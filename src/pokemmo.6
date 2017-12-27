@@ -70,7 +70,9 @@ Verbose output in stdout.
 Enables debugging of child java processes (Client and Updater)
 .TP
 .B --swr
-When launching, the client will attempt to use a software renderer if one is available. If the client is in a Mesa3D environment, LIBGL_ALWAYS_SOFTWARE will be enabled. Otherwise the internal LWJGL2 swr will be enabled.
+When launching, the client will attempt to use a software renderer if one is available.
+If the client is in a Mesa3D environment, LIBGL_ALWAYS_SOFTWARE will be enabled.
+Otherwise the internal LWJGL2 swr will be enabled.
 .TP
 .B --reverify
 Reverify the contents of the PokeMMO directory using the bootstrapper. This process is non-destructive.
@@ -82,11 +84,6 @@ Use the operating system's default settings for java RAM allocation (-Xmx & -Xms
 .SH AUTHOR
 .br
 The PokeMMO game client is developed by PokeMMO.eu <admin@pokemmo.eu>.
-.br
-The permitted usage of the PokeMMO game client is defined by a non-free license.
-.br
-The content of this license can be found in the game client after an account's
-first login or at https://pokemmo.eu/tos
 .PP
 This manual page was written by Carlos Donizete Froes [a.k.a coringao],
 for the Debian project (but may be used by others).
