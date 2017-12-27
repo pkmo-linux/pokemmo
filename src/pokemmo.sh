@@ -1,13 +1,14 @@
 #!/bin/bash
 #
-#	(c) Copyright holder 2012-2017 PokeMMO.eu <linux@pokemmo.eu>
-#	(c) Copyright 2017 Carlos Donizete Froes [a.k.a coringao]
+#    (c) Copyright holder 2012-2017 PokeMMO.eu <linux@pokemmo.eu>
+#    (c) Copyright 2017 Carlos Donizete Froes [a.k.a coringao]
 #
-#	This file is part of PokeMMO, is an emulator of several popular
-#	console games with additional features and multiplayer capabilities.
+#    This file is part of PokeMMO, an emulator of several popular
+#    console games with additional features and multiplayer capabilities.
 #
-#	Use of this file is governed by a GPLv3 license that can be found
-#	in the LICENSE file.
+#    Use of this file is governed by a GPLv3 license that can be found
+#    in the LICENSE file. This program is released under the GPL with the
+#   additional exemption that compiling, linking, and/or using OpenSSL is allowed.
 #
 # Script name:    'pokemmo.sh'
 # Edited version: '1.4.3'
@@ -87,15 +88,52 @@ showMessage() {
 }
 
 downloadPokemmo() {
-  rm -f "$PKMOCONFIGDIR/pokemmo"
-  find "$POKEMMO" -type f -name "*.TEMPORARY" -exec rm -f {} +
+  # The openssl command line utilities are a base package in this version of Debian, so this should only error on a broken environment, or during a case where the user has broken their openssl access
+  [[ $(which openssl) ]] || showMessage --error "The `openssl` binary was not found. Please check your PATH is set correctly and restart the program."
 
-  cp -f /usr/share/games/pokemmo/pokemmo_bootstrapper.jar "$POKEMMO/"
+  DL_MIRRORS=(https://dl.pokemmo.eu https://files.pokemmo.eu https://dl.pokemmo.download https://dl.pokemmo.com)
+  # This keyfile is provided by the PokeMMO developers. Do not alter/remove it, it is used to confirm the source of the downloaded files!
+  PKMO_PUBKEY="-----BEGIN PUBLIC KEY-----\nMIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAyfYQx1kSfIVGdGzcHmVV\nP7cbyLsMXGdLhwMnx2AD1MYgU170iFN5gHT+U248rH10L6D1UMlZK1LfCsbPkdQO\nir3C+8Do212NONyNm/7+ZGeIwbpy+jxEQH8Jfn4JYY7+Sn4qg249yW7DSY+XKvTO\ncphoXRNzSQp8u6IVj03mIw7zDA0SqMMFtnCXVP3NRmtjK1SuVVFLltFctz1Pp7f9\nuqgqnFlgD2l8/THnddTRM5IR6O9pbOXu7My0+Jli6+4zJgw5gQvgivYPCeess9gW\nRqpw66VTpMJERJYA6AIbVierAbjGmtRETRsHUOGAgo54G0oxtXXEaTWXF6n6mdgS\nE2Ra8q7P23stsSWU3mDNQjXO0XOhtAKQCZfvICxmsH3ed5hm8bEC5yga8z8m0vyZ\n71fWzP4Q3g6B+o6oDsMX1nWbV2GEHci/6nwFofgOJkLINaZfUTivAIRuxECVwjTT\na7ruRNgFlA2ciGUIIke2Ev2cYzyBA4LLARky2FZiEM0VAgMBAAE=\n-----END PUBLIC KEY-----"
+
+  for (( i=0; i<"${#DL_MIRRORS[@]}"; i++ )); do
+    echo "Trying mirror ${DL_MIRRORS[$i]}"
+
+    [[ -f "$POKEMMO/pokemmo_updater.jar" || -f "$POKEMMO/pokemmo_updater.sig256" ]] && rm -f "$POKEMMO/pokemmo_updater.jar" "$POKEMMO/pokemmo_updater.sig256"
+    MIRROR_STATUS=$( ( cd "$POKEMMO" && wget --https-only -U pokemmo_debian_setup --retry-connrefused --tries=3 --timeout=5 --waitretry=1 "${DL_MIRRORS[$i]}"/download/updater/pokemmo_updater.jar "${DL_MIRRORS[$i]}"/download/updater/pokemmo_updater.sig256 ) 2>&1)
+    r=$?
+
+    if [[ "$r" == "0" ]]; then
+        echo "Got updater from ${DL_MIRRORS[$i]}"
+
+        # `openssl` requires a filesystem to be inplace in order to read the checked key, but we don't really want to hit the disk due to security concerns
+        # so, instead, we'll abuse procfs a bit
+        exec {pkmo_fd}<<< "$(printf -- "$PKMO_PUBKEY")"
+        VALIDATION_STATUS=$(openssl dgst -sha256 -verify /proc/$$/fd/$pkmo_fd -signature "$POKEMMO"/pokemmo_updater.sig256 "$POKEMMO"/pokemmo_updater.jar)
+        exec {pkmo_fd}>&-
+
+        # Older versions of openssl could throw ambiguous exit codes depending on the type of failure (e.g. if files were missing, returned 0).
+        # This doesn't seem to be an issue now, but we'll prefer to parse the stdout instead of the exit codes for now
+        if [[ "$VALIDATION_STATUS" = "Verified OK" ]]; then
+            echo "Updater Verified OK!"
+            break
+        else
+            echo "WARNING: Downloaded jar failed validation! Jumping to next mirror"
+        fi
+    elif [[ "$r" != "0" && "${DL_MIRRORS[$i]}" = "${DL_MIRRORS[-1]}" ]]; then
+        rm -f "$POKEMMO/pokemmo_updater.jar" "$POKEMMO/pokemmo_updater.sig256"
+        showMessage --error "Failed to download the updater:\n\n$MIRROR_STATUS"
+    else
+        echo "WARNING: Failed to download updater from mirror ${DL_MIRRORS[$i]}. Jumping to next.."
+    fi
+  done
+
+  rm -f "$PKMOCONFIGDIR/pokemmo" "$POKEMMO/pokemmo_updater.sig256"
+  find "$POKEMMO" -type f -name "*.TEMPORARY" -exec rm -f {} +
 
   # Updater exits with 1 on successful update
   getJavaOpts "updater"
-  (cd "$POKEMMO" && java ${JAVA_OPTS[*]} -cp ./pokemmo_bootstrapper.jar com.pokeemu.updater.ClientUpdater -install -quick) && exit 1 || echo "installed=1" > "$PKMOCONFIGDIR/pokemmo"
-  rm -f "$POKEMMO/pokemmo_bootstrapper.jar"
+  (cd "$POKEMMO" && java ${JAVA_OPTS[*]} -cp ./pokemmo_updater.jar com.pokeemu.updater.ClientUpdater -install -quick) && exit 1 || echo "installed=1" > "$PKMOCONFIGDIR/pokemmo"
+  rm -f "$POKEMMO/pokemmo_updater.jar"
 }
 
 verifyInstallation() {
